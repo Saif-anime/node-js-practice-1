@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registeration</title>
+</head>
+<body>
+    <h1>Registeration Form </h1>
+<form method="post" enctype="multipart/form-data">
+<input type="text" name="fname" placeholder="fname"><br>
+<input type="email" name="email"  placeholder="email"><br>
+<input type="number" name="phone"  placeholder="phone"><br>
+<input type="password" name="password"  placeholder="password"><br>
+<input type="file" name="file" ><br>
+<input type="submit" >
+</form>
+
+<h1>Beautyfull Data</h1>
+
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Password</th>
+        <th>Image</th>
+        <th colspan="2">Action</th>
+    </tr>
+
+    {{#each data}}
+     <tr>
+        <td>{{this.fname}}</td>
+        <td>{{this.email}}</td>
+        <td>{{this.phone}}</td>
+        <td>{{this.password}}</td>
+        <td><img src="/upload/{{this.file}}" width="100px" height="100px" alt=""></td>
+        <td><button onclick="deleteUser('{{this.id}}')">Delete</button></td>
+         <td><a href="/update/{{this.id}}">Update</a></td>
+    </tr>
+    {{/each}}
+    
+
+
+</table>
+
+</body>
+
+    <script>
+        function deleteUser(userId) {
+            fetch('/delete/' + userId, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Additional headers if needed
+                },
+                // You can include a request body if necessary
+                // body: JSON.stringify({ /* data */ }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Handle the success response
+                alert('delete user succfull'+data);
+                window.location = "";
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        }
+    </script>
+</html>
+
+  

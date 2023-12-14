@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Registration</title>
+</head>
+
+<body>
+    <h1>Update Registration Form</h1>
+    <form enctype="multipart/form-data" id="myForm" onsubmit="UpdateUser('{{data.0.id}}')">
+        <input type="text" id="name" name="fname" placeholder="fname" value="{{data.0.fname}}"><br>
+        <input type="email" id="email" name="email" placeholder="email" value="{{data.0.email}}"><br>
+        <input type="number" id="phone" name="phone" placeholder="phone" value="{{data.0.phone}}"><br>
+        <input type="password" id="pass" name="password" placeholder="password" value="{{data.0.password}}"><br>
+        <label for="file">
+            <img src="/upload/{{data.0.file}}" width="100px" height="100px" alt="">
+        </label>
+        <input type="file" id="file" onchange="fun()" name="file" hidden><br>
+        <input type="submit">
+    </form>
+
+    <script>
+        var img = document.querySelector('img')
+
+        function fun() {
+            var file = document.querySelector('#file');
+            if (file.files && file.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file.files[0]);
+
+            }
+        }
+
+       function UpdateUser(userId) {
+    event.preventDefault(); // Prevent the form from submitting the traditional way
+    const form = document.getElementById('myForm');
+    const formData = new FormData(form);
+
+    fetch('/update/' + userId, {
+        method: 'PUT',
+        body: formData,
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('Update user successful: ' + JSON.stringify(data));
+            window.location.href = "http://localhost:8000";
+            // Handle the success response or navigate to another page
+            // For example, you can update the UI dynamically without reloading the page
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
+
+    </script>
+</body>
+
+</html>
